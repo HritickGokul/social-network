@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block body_block %}
+<div class="container">
+  <div style="border: 1px solid #E5E5E5; padding: 10px; background-color: #E5E5E5; border-radius: 20px;" class="single_post">
+    <div class="row" style="border-bottom: 1px solid #E5E5E5;">
+      <div class="col-lg-1">
+        <img class="rounded-circle account-img" style="height: 40px; width: 40px; margin-right: 20px;" src="{{post.author.profile.image.url}}" alt="">
+      </div>
+      <div class="col-lg-5">
+        <h3><a href="{% url 'account:profile' post.author.profile.slug %}" style="text-decoration: none; color: black;">{{post.author}}</a></h3>
+      </div>
+      {% if post.author == user %}
+      <div class="col-lg-6" style="padding-left: 350px;">
+        <a class="btn btn-primary" href="{% url 'post:post_update' post.id %}">Update</a>
+        <a class="btn btn-danger" href="{% url 'post:post_delete' post.id %}">Delete</a>
+      </div>
+      {% endif %}
+    </div>
+    <div class="row" style="padding: 10px;">
+      <div class="col-lg-5">
+        <img style="height: 400px; width: 400px; margin-right: 20px;" src="{{post.post_picture.url}}" alt="">
+        <div class="date">
+          <small class="text-muted">{{post.created_date}}</small>
+          <a href="{% url 'post:liked_by' post.id %}"><h4>{{total_likes}} likes</h4></a>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <h2 style="font-size:40px;"class="display-4">{{post.title}}</h2>
+        <h3>{{post.caption}}</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-1">
+        {% if liked %}
+        <form action="{% url 'post:liked_detail' post.id %}" method="POST">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger" value="{{post.id}}" name="like">Unlike</button>
+        </form>
+        {% else %}
+        <form action="{% url 'post:liked_detail' post.id %}" method="POST">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger" value="{{post.id}}" name="like">Like</button>
+        </form>
+        {% endif %}
+      </div>
+      <div class="col-lg-11">
+        <a class="btn btn-secondary" href="{% url 'post:comment_create' post.id %}">Comment</a>
+      </div>
+    </div>
+  </div><br>
+  <h2 style="color: gray;">Comments on this post</h2>
+  {% if post.comments.all %}
+  {% for comment in post.comments.all %}
+  <div class="commentss"  style="border: 1px solid #E5E5E5; border-radius: 20px; padding: 10px; background-color: white;">
+    <div class="row">
+      <div class="col-lg-1">
+        <img class="rounded-circle account-img" style="height: 40px; width: 40px;" src="{{comment.userr.profile.image.url}}" alt="">
+      </div>
+      <div class="col-lg-5">
+        <h6><a href="{% url 'account:profile' comment.userr.profile.slug %}" style="text-decoration: none; color: black;">{{comment.userr}}</a></h6>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        {% if comment.parent %}
+          <h3><a href="{% url 'account:profile' comment.parent.userr %}">@{{comment.parent.userr}}</a> {{comment.comment_text}}</h3>
+          <small>{{comment.commented_at}}</small>
+        {% else %}
+          <h3>{{comment.comment_text}}</h3>
+          <small>{{comment.commented_at}}</small>
+        {% endif %}
+        {% if user != comment.userr %}
+        <a style="text-decoration: none;" href="{% url 'post:reply_comment' comment.id %}">Reply to @{{comment.userr}}</a>
+        {% endif %}
+      </div>
+      {% if post.author == user or comment.userr == user %}
+      <div class="col" >
+        <a  style="margin-left: 400px;" class="btn btn-danger" href="{% url 'post:comment_remove' comment.id %}">Delete</a>
+      </div>
+      {% endif %}
+    </div>
+  </div><br>
+  {% endfor %}
+  {% else %}
+  <h4>No comments on this post yet.</h4>
+  {% endif %}
+</div>
+{% endblock %}

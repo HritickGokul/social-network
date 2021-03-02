@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block body_block %}
+{% if user.is_authenticated %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-8">
+      {% for post in home_posts %}
+        {% if liked %}
+
+        {% else %}
+          <div style="border: 1px solid #E5E5E5; padding: 10px; border-radius: 20px; background-color: #E5E5E5;" class="single_post">
+            <div class="row">
+              <div class="col-lg-1">
+                <img class="rounded-circle account-img" style="height: 40px; width: 40px; margin-right: 20px;" src="{{post.author.profile.image.url}}" alt="">
+              </div>
+              <div class="col-lg-5">
+                <h3><a href="{% url 'account:profile' post.author.profile.slug %}" style="text-decoration: none; color: black;">{{post.author}}</a></h3>
+              </div>
+              {% if post.author == user%}
+              <div class="crup" style="padding-left: 150px;">
+                <a style="margin-right: 5px;" class="btn btn-primary" href="{% url 'post:post_update' post.id %}">Update</a>
+                <a class="btn btn-danger" href="{% url 'post:post_delete' post.id %}">Delete</a>
+              </div>
+              {% endif %}
+              <div class="col-lg-6">
+
+              </div>
+            </div>
+            <div class="row" style="padding: 10px;">
+              <div class="col-lg-7">
+                <img style="height: 400px; width: 400px; margin-right: 20px;" src="{{post.post_picture.url}}" alt="">
+                <small class="text-muted">{{post.created_date}}</small>
+                <a href="{% url 'post:liked_by' post.id %}"><h4>{{post.like.count}} likes</h4></a>
+                <a href="{% url 'post:post_detail' post.id %}"><h5 style="color: gray; text-decoration: null;">View all {{post.comments.count}} comments</h5></a>
+              </div>
+              <div class="col-lg-5">
+                <h2 style="font-size:40px;"class="display-4">{{post.title}}</h2>
+                <h3>{{post.caption}}</h3>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-1">
+                {% if liked %}
+                <form action="{% url 'post:liked_detail' post.id %}" method="POST">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger" value="{{post.id}}" name="like">Unlike</button>
+                </form>
+                {% else %}
+                <form action="{% url 'post:liked_detail' post.id %}" method="POST">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger" value="{{post.id}}" name="like">Like</button>
+                </form>
+                {% endif %}
+              </div>
+              <div class="col-lg-11">
+                <a class="btn btn-secondary" href="{% url 'post:comment_create' post.id %}">Comment</a>
+              </div>
+            </div>
+          </div><br>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <div class="col-sm-4"  data-spy="affix" data-offset-top="205">
+      <div class="side-note" style = 'padding: 10px; border-radius: 20px; background-color: white;'>
+        <div class="row">
+          <div class="col-lg-3">
+            <img class="rounded-circle account-img" style="height: 80px; width: 80px; margin-right: 20px;" src="{{user.profile.image.url}}" alt="">
+          </div>
+          <div class="col-lg-9">
+            <h3><a href="{% url 'account:profile' user.profile.slug %}" class="namee" style="text-decoration: none; color: black;">{{user.username}}</a></h3>
+            <h6 style="color: #A5A5A5;">{{user.email}}</h6>
+          </div>
+        </div>
+        <p></p>
+        <a class="btn btn-success" href="{% url 'post:post_create' %}">Create New Post</a>
+      </div><br>
+      <div class="suggestion" style = 'padding: 10px; border-radius: 20px; background-color: white;'>
+        <h3 style="color: gray;">Suggestion</h3><br>
+        {% for userr in users %}
+          {% if userr.is_superuser or userr == user %}
+          {% else %}
+            {% if user in userr.followers %}
+
+            {% else %}
+              <div class="row">
+                  <div class="col-lg-3">
+                    <img class="rounded-circle account-img" style="height: 40px; width: 40px; margin-right: 20px;" src="{{userr.profile.image.url}}" alt="">
+                  </div>
+                  <div class="col-lg-9">
+                    <h5><a href="{% url 'account:profile' userr.profile.slug %}" class="namee" style="text-decoration: none; color: black;">{{userr.username}}</a></h5>
+                  </div>
+              </div><br>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="container">
+  <h1 style="font-family: 'Archivo Black', sans-serif; font-size: 100px;">Welcome to TheSocialNetwork!</h1>
+  <br>
+  <h3 class="display-4" style="font-size: 40px;">What are you still waiting for. Do you have something interesting to share with others? go on hop inside the website.</h3><br>
+</div>
+{% endif %}
+{% endblock %}

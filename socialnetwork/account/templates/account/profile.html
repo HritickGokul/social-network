@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block body_block %}
+    <div class="container">
+        <div class="row" style='background-color: #E5E5E5; border-radius: 20px; padding: 10px;'>
+          <div class="col-lg-4" style="padding-left: 100px; padding-top: 15px;">
+            <img class="rounded-circle account-img" style="height: 200px; width: 190px; margin-right: 20px;" src="{{ obj.image.url }}">
+          </div>
+          <div class="col-lg-8" style="padding-top: 45px;">
+            <div class="row">
+              <div class="col-lg-3.5" style="padding-right: 20px;">
+                <h3 style="font-size: 30px;" class="display-4"><b>{{ obj.user.username }}</b></h3>
+                <p class="text-secondary">{{ obj.user.email }}</p>
+                <p></p>
+                <h6>{{obj.bio}}</h6>
+                <div class="row">
+                  {% if obj.user != user %}
+                  <div class="col-lg-3">
+                    {% if followed %}
+                      <a class="btn btn-primary" style="margin-top: 25px;" href="{% url 'account:add_follower' obj.user.profile.slug %}">Follow</a>
+                    {% else %}
+                      <a class="btn btn-secondary" style="margin-top: 25px;" href="{% url 'account:add_follower' obj.user.profile.slug %}">Following</a>
+                    {% endif %}
+                  </div>
+                  <div class="col-lg-3">
+                    <h4 style="padding-left: 15px;">{{count}}</h4>
+                    <h5 style="color:gray;">Posts</h5>
+                  </div>
+                  <div class="col-lg-3">
+                    <h4 style="padding-left: 15px;">{{obj.followers.count}}</h4>
+                    <h5 style="color:gray;">Followers</h5>
+                  </div>
+                  <div class="col-lg-3">
+                    <h4 style="padding-left: 15px;">{{obj.following.count}}</h4>
+                    <h5 style="color:gray;">Following</h5>
+                  </div>
+                  {% else %}
+                  <div class="col-lg-4">
+                    <h4 style="padding-left: 15px;">{{count}}</h4>
+                    <h5 style="color:gray;">Posts</h5>
+                  </div>
+                  <div class="col-lg-4">
+                    <h4 style="padding-left: 15px;">{{obj.followers.count}}</h4>
+                    <h5 style="color:gray;">Followers</h5>
+                  </div>
+                  <div class="col-lg-4">
+                    <h4 style="padding-left: 15px;">{{obj.following.count}}</h4>
+                    <h5 style="color:gray;">Following</h5>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+              {% if obj.user == user %}
+              <div class="col-lg-3.5" style="padding-right: 20px;">
+                <a class="btn btn-outline-dark" href="{% url 'account:profile_edit' obj.user.profile.slug %}">Edit Profile</a>
+              </div>
+              <div class="col-lg-3.5" style="padding-right: 20px;">
+                <a href="#"><img src="https://cdn0.iconfinder.com/data/icons/iconico-3/1024/37.png" style="height: 50px; width: 50px;" alt=""></a>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+        {% for post in posts %}
+          {% if post.author == obj.user %}
+            <div class="col-lg-4">
+              <a href="{% url 'post:post_detail' post.id %}"><img style="height: 300px; width: 300px; margin: 20px;" src="{{post.post_picture.url}}" alt=""></a>
+            </div>
+          {% endif %}
+        {% endfor %}
+       </div>
+    </div>
+{% endblock %}

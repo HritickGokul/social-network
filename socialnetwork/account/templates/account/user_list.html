@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block body_block %}
+  {% for userr in userss %}
+    {% if userr.username != self.user.username %}
+      <div class="container"  style="border:1px solid #E5E5E5;">
+        <div class="row" >
+          <div class="col-lg-3">
+            <img class="rounded-circle account-img" style="height: 80px; width: 80px; margin-right: 20px;" src="{{ userr.profile.image.url }}" alt="">
+          </div>
+          <div class="col-lg-9">
+            <h3><a href="{% url 'profile' %}" class="namee" style="text-decoration: none; color: black;">{{userr.username}}</a></h3>
+            <h6 style="color: #A5A5A5;">{{userr.email}}</h6>
+          </div>
+        </div>
+      </div><br>
+    {% endif %}
+  {% endfor %}
+{% endblock %}

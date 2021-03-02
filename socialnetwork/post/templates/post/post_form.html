@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block body_block %}
+<div class="container">
+  <div class="jumbotron">
+    <h1>Create New Post</h1>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input class="btn btn-primary" type="submit" name="" value="Post">
+    </form>
+  </div>
+</div>
+{% endblock %}

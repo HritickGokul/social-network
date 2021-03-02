@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>TheSocialNetwork</title>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'css/account/acc.css' %}">
+  </head>
+  <body style="background-color: #f2f2f2;">
+    {% if user.is_authenticated %}
+      <nav class="navbar navbar-expand-lg navbar-light bg-light" style="border-bottom: 1px solid #E5E5E5;">
+        <div class="container">
+          <a class="navbar-brand" style="font-family: 'Pacifico', cursive;" href="{% url 'home' %}"><h2>HrithickGram</h2></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="nav navbar-nav navbar-right">
+              <li class="nav-item">
+                <a class="nav-link navbar-right" href="{% url 'account:profile' user.profile.slug %}">My Profile</a>
+              </li>
+              <li>
+                <a class="nav-link" href="{% url 'account:logout' %}">Logout</a>
+              </li>
+              <li>
+                <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+              </li>
+            </ul>
+          </div>
+          <div class="searchbar">
+            <form action="{% url 'account:search_user' %}" class="form-inline my-2 my-lg-0" method = "POST" >
+              {% csrf_token %}
+              <input class="form-control mr-sm-2" name="search_user_name" type="search" placeholder="Search User" aria-label="Search">
+              <button type="submit" class="btn btn-danger">Search</button>
+            </form>
+          </div>
+        </div>
+      </nav>
+        {% else %}
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+          <a class="navbar-brand" style="font-family: 'Pacifico', cursive;" href="{% url 'home' %}"><h2>HrithickGram</h2></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item ">
+              <a class="btn btn-outline-dark" href="{% url 'account:login' %}">Login</a>
+            </li>
+          </ul>
+        </div>
+
+      </nav>
+    {% endif %}
+    <p></p>
+
+    {% block body_block %}
+    {% endblock %}
+  </body>
+</html>

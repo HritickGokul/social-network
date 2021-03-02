@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block body_block %}
+<div class="container">
+  <div class="jumbotron">
+    {% if search_user_name != None %}
+      <h2>Is this the user you are searching for?</h2>
+      <p></p>
+      <div class="row">
+        <div class="col-lg-1.5">
+          <img class="rounded-circle account-img" style="height: 80px; width: 80px; margin-right: 20px;" src="{{search_user_name.profile.image.url}}" alt="">
+        </div>
+        <div class="col-lg-10.5" style="margin-top: 20px; padding-right: 30px;">
+          <a href="{% url 'account:profile' search_user_name %}"><h2>{{search_user_name.username}}</h2></a>
+        </div>
+      </div>
+    {% else %}
+      <h2>The user you are searching for does not exist.</h2>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
